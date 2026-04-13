@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leave a Review | Perspective Architecture</title>
+  <title>Private Feedback | Perspective Architecture</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -68,21 +68,12 @@
       padding: 4rem 1.5rem;
     }
 
-    .review-card {
+    .feedback-card {
       background: var(--white);
       max-width: 560px;
       width: 100%;
       padding: 3.5rem;
-      text-align: center;
       border-top: 3px solid var(--accent);
-    }
-
-    .review-hero-img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      margin-bottom: 2.5rem;
-      display: block;
     }
 
     .eyebrow {
@@ -107,50 +98,54 @@
       color: var(--mid);
       font-weight: 300;
       line-height: 1.7;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
 
-    .stars-label {
+    .rating-display {
+      display: flex;
+      gap: 0.3rem;
+      margin-bottom: 2rem;
+    }
+    .rating-display .star {
+      font-size: 1.6rem;
+      color: #d9d0c7;
+    }
+    .rating-display .star.filled { color: #c9934a; }
+
+    .form-group {
+      margin-bottom: 1.4rem;
+    }
+    label {
+      display: block;
       font-size: 0.72rem;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--mid);
-      display: block;
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    input, textarea {
+      width: 100%;
+      background: var(--light);
+      border: 1px solid rgba(184,168,152,0.3);
+      padding: 0.85rem 1rem;
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color var(--trans);
+      border-radius: 0;
+      appearance: none;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 130px;
+      line-height: 1.6;
     }
 
-    .stars-row {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .star-btn {
-      font-size: 2.8rem;
-      color: #d9d0c7;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: color 0.2s ease, transform 0.15s ease;
-      line-height: 1;
-      padding: 0 0.1rem;
-    }
-    .star-btn:hover,
-    .star-btn.hovered,
-    .star-btn.selected { color: #c9934a; transform: scale(1.12); }
-
-    .star-hint {
-      font-size: 0.82rem;
-      color: var(--mid);
-      font-weight: 300;
-      height: 1.4rem;
-      display: block;
-      margin-bottom: 2rem;
-      transition: opacity var(--trans);
-    }
-
-    .btn-continue {
+    .btn-submit {
       width: 100%;
       background: var(--ink);
       color: var(--white);
@@ -163,20 +158,31 @@
       text-transform: uppercase;
       cursor: pointer;
       transition: background var(--trans);
-      opacity: 0.35;
-      pointer-events: none;
+      margin-top: 0.5rem;
     }
-    .btn-continue.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-    .btn-continue.active:hover { background: var(--accent); }
+    .btn-submit:hover { background: var(--accent); }
 
-    .privacy-note {
-      margin-top: 1.5rem;
-      font-size: 0.75rem;
-      color: var(--stone);
-      line-height: 1.6;
+    .thank-you {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .thank-you .check {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .thank-you h2 {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 0.6rem;
+    }
+    .thank-you p {
+      font-size: 0.92rem;
+      color: var(--mid);
+      font-weight: 300;
+      line-height: 1.7;
     }
 
     footer {
@@ -189,8 +195,7 @@
 
     @media (max-width: 600px) {
       header { padding: 1.2rem 1.2rem; }
-      .review-card { padding: 2.2rem 1.5rem; }
-      .star-btn { font-size: 2.2rem; }
+      .feedback-card { padding: 2.2rem 1.5rem; }
     }
   </style>
 </head>
@@ -202,83 +207,73 @@
   </header>
 
   <main>
-    <div class="review-card">
-      <img
-        src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&q=80&auto=format&fit=crop&crop=top"
-        alt="Perspective Architecture projects"
-        class="review-hero-img"
-      />
-      <span class="eyebrow">Client Feedback</span>
-      <h1>How Was Your<br><em>Experience?</em></h1>
-      <p class="sub">Your feedback helps us improve and helps others find trusted architectural design in Dunedin and Mosgiel.</p>
+    <div class="feedback-card">
 
-      <span class="stars-label">Select your rating</span>
-      <div class="stars-row" id="starsRow">
-        <button class="star-btn" data-val="1" aria-label="1 star">★</button>
-        <button class="star-btn" data-val="2" aria-label="2 stars">★</button>
-        <button class="star-btn" data-val="3" aria-label="3 stars">★</button>
-        <button class="star-btn" data-val="4" aria-label="4 stars">★</button>
-        <button class="star-btn" data-val="5" aria-label="5 stars">★</button>
+      <div id="formSection">
+        <span class="eyebrow">Private Feedback</span>
+        <h1>Tell Us What<br><em>Happened.</em></h1>
+        <p class="sub">Your feedback goes directly to our team and will never be published. We read every message and take all comments seriously.</p>
+
+        <div class="rating-display" id="ratingDisplay">
+          <span class="star" data-n="1">★</span>
+          <span class="star" data-n="2">★</span>
+          <span class="star" data-n="3">★</span>
+          <span class="star" data-n="4">★</span>
+          <span class="star" data-n="5">★</span>
+        </div>
+
+        <form id="feedbackForm" novalidate>
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="e.g. Jane Smith" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="so we can follow up if needed" />
+          </div>
+          <div class="form-group">
+            <label for="message">Your Feedback <span style="color:var(--accent)">*</span></label>
+            <textarea id="message" name="message" placeholder="Please share what could have been better…" required></textarea>
+          </div>
+          <input type="hidden" id="ratingInput" name="rating" />
+          <button type="submit" class="btn-submit">Send Feedback</button>
+        </form>
       </div>
-      <span class="star-hint" id="starHint"> </span>
 
-      <button class="btn-continue" id="continueBtn">Continue</button>
+      <div class="thank-you" id="thankYou">
+        <div class="check">✓</div>
+        <h2>Thank You for<br><em>Your Honesty.</em></h2>
+        <p>We've received your feedback and will review it carefully.<br>We appreciate you taking the time to help us improve.</p>
+      </div>
 
-      <p class="privacy-note">4 or 5 stars? You'll be taken directly to Google Reviews.<br>1–3 stars? We'll collect your private feedback instead.</p>
     </div>
   </main>
 
   <footer>© 2025 Perspective Architecture Limited · Mosgiel, Dunedin</footer>
 
   <script>
-    const hints = {
-      1: 'We're sorry to hear that.',
-      2: 'We appreciate your honesty.',
-      3: 'Thanks — we'd love to know more.',
-      4: 'Great to hear!',
-      5: 'Amazing — thank you so much!'
-    };
+    const params = new URLSearchParams(window.location.search);
+    const rating = parseInt(params.get('rating'), 10) || 0;
 
-    // IMPORTANT: Replace with actual Google Business Profile review link
-    const GOOGLE_REVIEW_URL = 'https://g.page/r/YOUR_GOOGLE_PLACE_ID/review';
+    document.getElementById('ratingInput').value = rating;
 
-    let selected = 0;
-    const stars = document.querySelectorAll('.star-btn');
-    const hint = document.getElementById('starHint');
-    const btn = document.getElementById('continueBtn');
-
-    stars.forEach(star => {
-      star.addEventListener('mouseenter', () => {
-        const val = +star.dataset.val;
-        stars.forEach(s => {
-          s.classList.toggle('hovered', +s.dataset.val <= val);
-        });
-        hint.textContent = hints[val];
+    if (rating > 0) {
+      document.querySelectorAll('#ratingDisplay .star').forEach(star => {
+        if (parseInt(star.dataset.n, 10) <= rating) star.classList.add('filled');
       });
+    }
 
-      star.addEventListener('mouseleave', () => {
-        stars.forEach(s => s.classList.remove('hovered'));
-        hint.textContent = selected ? hints[selected] : ' ';
-      });
-
-      star.addEventListener('click', () => {
-        selected = +star.dataset.val;
-        stars.forEach(s => {
-          s.classList.remove('selected');
-          if (+s.dataset.val <= selected) s.classList.add('selected');
-        });
-        hint.textContent = hints[selected];
-        btn.classList.add('active');
-      });
-    });
-
-    btn.addEventListener('click', () => {
-      if (!selected) return;
-      if (selected >= 4) {
-        window.open(GOOGLE_REVIEW_URL, '_blank');
-      } else {
-        window.location.href = `private.html?rating=${selected}`;
+    document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const message = document.getElementById('message').value.trim();
+      if (!message) {
+        document.getElementById('message').focus();
+        return;
       }
+      // TODO: wire up to your form backend (e.g. Formspree, Netlify Forms, etc.)
+      // fetch('/api/feedback', { method: 'POST', body: new FormData(this) });
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('thankYou').style.display = 'block';
     });
   </script>
 </body>
